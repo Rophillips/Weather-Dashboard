@@ -1,3 +1,10 @@
+//value of input
+var city = $("#searchTerm").val();
+
+//store API
+var apiKey = "&appid=3bbe4c6e91107f9a99ad0d2db9123f00";
+
+
 // GIVEN a weather dashboard with form inputs
 
 // WHEN I search for a city
