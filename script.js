@@ -2,25 +2,52 @@
 var city = $("#searchTerm").val();
 
 //store API
-var apiKey = "&appid=3bbe4c6e91107f9a99ad0d2db9123f00";
+var apiKey = "&appid=af2ff77aed8aed6e2fddf4fb660a9548";
+
+var date = newDate();
+
+$("#searchTerm").keypress(function(event){
+
+    if (event.keyCode === 13) {
+        event.preventDefault();
+        $("#searchBtn").click();
+    }
+});
 
 
-// GIVEN a weather dashboard with form inputs
+$("#searchBtn").on("click", function() {
 
-// WHEN I search for a city
-// THEN I am presented with current and future conditions for that city and that city is added to the search history
+    $('#forecastH5').addClass('show');
+  
+    // get the value of the input from user
+    city = $("#searchTerm").val();
+    
+    // clear input box
+    $("#searchTerm").val("");
 
-// WHEN I view current weather conditions for that city
-// THEN I am presented with the city name, the date, an icon representation of weather conditions, the temperature, the humidity, the wind speed, and the UV index
+//url to call api
+var queryUrl = "https://api.openweathermap.org/data/2.5/forecast?q=" + city + apiKey;
 
-// WHEN I view the UV index
-// THEN I am presented with a color that indicates whether the conditions are favorable, moderate, or severe
+$.ajax({
+    url: queryUrl,
+    method: "GET"
+})
 
-// WHEN I view future weather conditions for that city
-// THEN I am presented with a 5-day forecast that displays the date, an icon representation of weather conditions, the temperature, and the humidity
+.then(function(response) {
+    console.log(response)
+    console.log(response.name)
 
-// WHEN I click on a city in the search history
-// THEN I am again presented with current and future conditions for that city
+    console.log(response.weather[0].icon)
+    let tempF = (response.main.temp - 273.15) * 1.80 + 32;
+    console.log(Math.floor(tempF))
 
-// WHEN I open the weather dashboard
-// THEN I am presented with the last searched city forecast
+    console.log(response.main.humidity)
+
+    console.log(response.wind.speed)
+
+    getCurrentConditions(response);
+    getCurrentForecast(response);
+    makeList();
+
+    })
+});
