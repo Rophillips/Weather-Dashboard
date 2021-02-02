@@ -1,5 +1,5 @@
 
-
+let cardBody;
 
 let city = $("#searchTerm").val();
 // store api key
@@ -33,6 +33,10 @@ $("#searchBtn").on("click", function() {
     method: "GET"
   })
   .then(function (response){
+  var lat = response.coord.lat;
+  var lon = response.coord.lon;
+  uvIndex(lat, lon);
+  console.log(lat, lon);
 
     console.log(response)
 
@@ -51,7 +55,26 @@ $("#searchBtn").on("click", function() {
     makeList();
 
     })
+
   });
+  function uvIndex(latitude, longitude){
+   var queryUrl =`https://api.openweathermap.org/data/2.5/onecall?lat=${latitude}&lon=${longitude}${apiKey}`
+   $.ajax({
+     url: queryUrl,
+     method: "GET"
+     
+   }).then(function(response){
+     console.log(response)
+     var uv = $("<p>").text(`UV: ${response.current.uvi}`)
+     console.log(uv)
+     $(cardBody).append(uv)
+   })
+
+   
+
+   
+
+  }
 
   function makeList() {
     let listItem = $("<li>").addClass("list-group-item").text(city);
@@ -68,7 +91,7 @@ $("#searchBtn").on("click", function() {
 
     // get and set the content 
     const card = $("<div>").addClass("card");
-    const cardBody = $("<div>").addClass("card-body");
+    cardBody = $("<div>").addClass("card-body");
     const city = $("<h4>").addClass("card-title").text(response.name);
     const cityDate = $("<h4>").addClass("card-title").text(date.toLocaleDateString('en-US'));
     const temperature = $("<p>").addClass("card-text current-temp").text("Temperature: " + tempF + " °F");
@@ -128,8 +151,10 @@ function getCurrentForecast () {
         card.append(cardBody);
         $("#forecast").append(card);
         //city.append(cityDate, image)
-
+        //need to apend date
+        //need to add local storage
       }
+      
     }
   });
 
